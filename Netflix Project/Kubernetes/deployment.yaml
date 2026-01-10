@@ -1,0 +1,21 @@
+apiversion : apps/v1
+kind : Deployment
+metadata :
+  name : netflix-deployment
+  labels :
+    app : netflix-app
+spec :
+  replicas : 2  
+  selector :
+    matchLabels :
+      app : netflix-app
+  template :
+    metadata :
+      labels :
+        app : netflix-app
+    spec :
+      containers :
+        - name : netflix-container
+          image : avian19/netflix:latest
+          ports :
+            - containerPort : 80

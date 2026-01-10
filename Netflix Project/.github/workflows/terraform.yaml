@@ -54,12 +54,8 @@ jobs:
             ~/.terraform/cache
           key: terraform-${{ hashFiles('**/*.tf') }}
           restore-keys: terraform-
-          
-      - name: Terraform Init
-        run: terraform init
 
-      - name: Terraform Plan
-        if: ${{ github.event.inputs.action == 'plan' }}
+      - name: Terraform Init
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
