@@ -21,7 +21,7 @@ resource "aws_instance" "ec2" {
 
   tags = {
     Name = "ec2-${count.index + 1}"
-    Env  = var.environment
+    Env  = var.env
   }
 }
 
