@@ -36,7 +36,7 @@ jobs:
 
             - name: Upload JAR
               working-directory : Java-Login-App
-              run: aws s3 cp target/*jar s3://cloud-bucket-1770975946/app.jar
+              run: aws s3 cp target/*war s3://cloud-bucket-1770975946/app.jar
 
             - name: Terraform Init
               run: terraform init
