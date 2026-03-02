@@ -22,6 +22,11 @@ jobs:
             - name : Build
               run : mvn clean package -f Java-Login-App/pom.xml
 
+            - name: Check target folder
+              working-directory: Java-Login-App
+              run: ls -l target
+
+
             - name: Configure AWS
               uses: aws-actions/configure-aws-credentials@v2
               with:
