@@ -30,7 +30,7 @@ jobs:
                   aws-region: us-east-1
 
             - name: Upload JAR
-              run: aws s3 cp app/target/loginapp-0.0.1-SNAPSHOT.jar s3://your-app-bucket/app.jar
+              run: aws s3 cp app/target/loginapp-0.0.1-SNAPSHOT.jar s3://cloud-bucket-1770975946/app.jar
 
             - name: Terraform Init
               run: terraform init
