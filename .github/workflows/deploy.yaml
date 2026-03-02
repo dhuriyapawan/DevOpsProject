@@ -20,7 +20,7 @@ jobs:
                cache: maven
 
             - name : Build
-              run : mvn clean package -f app/pom.xml
+              run : mvn clean package -f Java-Login-App/pm.xml
 
             - name: Configure AWS
               uses: aws-actions/configure-aws-credentials@v2
