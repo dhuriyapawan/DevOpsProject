@@ -1,6 +1,5 @@
 resource "aws_security_group" "alb_sg" {
-    vpc_id = aws_vpc.main.id
-
+    vpc_id = module.vpc.vpc_id
     ingress {
         from_port =  80
         to_port = 80
