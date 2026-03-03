@@ -1,10 +1,10 @@
-terraform {
-  backend "s3" {
-    bucket = "cloud-bucket-1770975946"
-    key = "java-login-App/terraform.tfstate"
-    region = "us-east-1"
+resource "aws_dynamodb_table" "terraform_lock" {
+  name         = "terraform-lock"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
 
-
-    dynamodb_table = "terraform-lock"
+  attribute {
+    name = "LockID"
+    type = "S"
   }
 }
