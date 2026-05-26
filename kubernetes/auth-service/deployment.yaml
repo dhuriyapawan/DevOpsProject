@@ -34,7 +34,7 @@ spec:
 
             - secretRef:
                 name: auth-service-secret
-
+ 
           resources:
             requests:
               memory: "256Mi"
