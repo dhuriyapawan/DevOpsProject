@@ -1,0 +1,34 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: user-service
+
+  template:
+    metadata:
+      labels:
+        app: user-service
+
+    spec:
+      containers:
+        - name: user-service
+
+          image: YOUR_ECR_REPO/user-service:latest
+
+          ports:
+            - containerPort: 3001
+
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "200m"
+
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

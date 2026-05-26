@@ -1,0 +1,21 @@
+# projects.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+
+metadata:
+  name: microservices-project
+  namespace: argocd
+
+spec:
+  description: Microservices Platform Project
+
+  sourceRepos:
+    - "*"
+
+  destinations:
+    - namespace: "*"
+      server: "*"
+
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"

@@ -1,0 +1,52 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+terraform.tfvars
+*.tfplan
+
+# Kubernetes
+kubeconfig
+
+# Node.js
+node_modules/
+npm-debug.log
+
+# Environment Variables
+.env
+.env.*
+
+# MacOS
+.DS_Store
+
+# VSCode
+.vscode/
+
+# IntelliJ
+.idea/
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+
+# Docker
+*.tar
+
+# Secrets
+secrets/
+*.pem
+*.key
+
+# Build
+dist/
+build/
+
+# Temporary Files
+tmp/
+temp/
