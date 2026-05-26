@@ -52,7 +52,7 @@ jobs:
             ${{ matrix.service }}:latest \
             ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${{ matrix.service }}:latest
 
-      - name: Push Docker Image
+      - name: Push Docker Image to  ECR
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 

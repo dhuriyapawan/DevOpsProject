@@ -17,6 +17,7 @@ spec:
         app: order-service
 
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: order-service
 
@@ -30,6 +31,7 @@ spec:
             requests:
               memory: "128Mi"
               cpu: "200m"
+              ephemeral-storage: "256Mi"
 
             limits:
               memory: "256Mi"

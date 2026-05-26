@@ -17,10 +17,11 @@ spec:
         app: auth-service
 
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: auth-service
 
-          image: 878445923420.dkr.ecr.us-east-1.amazonaws.com:latest
+          image: 878445923420.dkr.ecr.us-east-1.amazonaws.com:1.0.0
 
           imagePullPolicy: Always
 
@@ -38,10 +39,12 @@ spec:
             requests:
               memory: "256Mi"
               cpu: "250m"
+              ephemeral-storage: "512Mi"
 
             limits:
               memory: "512Mi"
               cpu: "500m"
+              ephemeral-storage: "1Gi"
 
           readinessProbe:
             httpGet:
@@ -59,15 +62,10 @@ spec:
             initialDelaySeconds: 20
             periodSeconds: 10
 ---
-# ConfigMap for auth-service (ensure no duplicate keys)
+# ConfigMap for auth-service
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: auth-service-config
   namespace: auth-service
-data:
-  AWS_REGION: us-east-1
-  DB_HOST: auth-db.auth-service.svc.cluster.local
-  DB_NAME: authdb
-  DB_PORT: "5432"
-  PORT: "3000"
+data: {}
