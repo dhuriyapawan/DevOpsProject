@@ -58,7 +58,6 @@ jobs:
 
           docker push \
             ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${{ matrix.service }}:latest
-# . 
   deploy:
     name: Deploy to EKS
     runs-on: ubuntu-latest
