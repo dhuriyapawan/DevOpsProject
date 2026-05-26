@@ -7,6 +7,7 @@ on:
     branches:
     - devops1
 
+    
 jobs:
   trivy-scan:
     name: Trivy Docker Scan
