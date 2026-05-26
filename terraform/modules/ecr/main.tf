@@ -75,13 +75,15 @@ resource "aws_ecr_repository_policy" "this" {
   })
 }
 resource "aws_ecr_repository" "repos" {
-  for_each = toset(var.repositories)
+  for_each = toset([
+    "auth-service",
+    "user-service",
+    "order-service"
+  ])
 
   name = each.value
 
   image_scanning_configuration {
     scan_on_push = true
   }
-
-  image_tag_mutability = "MUTABLE"
 }
