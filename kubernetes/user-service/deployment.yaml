@@ -16,10 +16,11 @@ spec:
         app: user-service
 
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: user-service
 
-          image: YOUR_ECR_REPO/user-service:latest
+          image: 878445923420.dkr.ecr.us-east-1.amazonaws.com/user-service:latest
 
           ports:
             - containerPort: 3001
@@ -28,7 +29,9 @@ spec:
             requests:
               memory: "128Mi"
               cpu: "200m"
+              ephemeral-storage: "1Gi"
 
             limits:
               memory: "256Mi"
               cpu: "500m"
+              ephemeral-storage: "2Gi"

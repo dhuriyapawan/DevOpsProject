@@ -20,7 +20,7 @@ spec:
       containers:
         - name: auth-service
 
-          image: YOUR_ECR_REPO/auth-service:latest
+          image: 878445923420.dkr.ecr.us-east-1.amazonaws.com:latest
 
           imagePullPolicy: Always
 
@@ -58,3 +58,16 @@ spec:
 
             initialDelaySeconds: 20
             periodSeconds: 10
+---
+# ConfigMap for auth-service (ensure no duplicate keys)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-service-config
+  namespace: auth-service
+data:
+  AWS_REGION: ap-south-1
+  DB_HOST: auth-db.auth-service.svc.cluster.local
+  DB_NAME: authdb
+  DB_PORT: "5432"
+  PORT: "3000"

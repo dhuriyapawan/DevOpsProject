@@ -20,7 +20,8 @@ spec:
       containers:
         - name: order-service
 
-          image: YOUR_ECR_REPO/order-service:latest
+          image: 878445923420.dkr.ecr.us-east-1.amazonaws.com/order-service:1.0.0
+          imagePullPolicy: IfNotPresent
 
           ports:
             - containerPort: 3002
