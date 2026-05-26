@@ -66,7 +66,7 @@ metadata:
   name: auth-service-config
   namespace: auth-service
 data:
-  AWS_REGION: ap-south-1
+  AWS_REGION: us-east-1
   DB_HOST: auth-db.auth-service.svc.cluster.local
   DB_NAME: authdb
   DB_PORT: "5432"
