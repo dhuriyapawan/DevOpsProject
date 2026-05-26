@@ -32,3 +32,8 @@ variable "cross_account_arns" {
   type        = list(string)
   default     = []
 }
+
+
+variable "repositories" {
+  type = list(string)
+}

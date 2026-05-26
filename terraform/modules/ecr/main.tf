@@ -74,3 +74,14 @@ resource "aws_ecr_repository_policy" "this" {
     ]
   })
 }
+resource "aws_ecr_repository" "repos" {
+  for_each = toset(var.repositories)
+
+  name = each.value
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  image_tag_mutability = "MUTABLE"
+}
