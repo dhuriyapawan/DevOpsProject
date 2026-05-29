@@ -46,7 +46,46 @@ jobs:
 
       - name: Terraform Validate
         run: terraform validate
-        
+      
+    
+      - name: Import Existing AWS Resources
+        run: |
+
+  
+                if aws iam get-role --role-name dev-eks-cluster-role >/dev/null 2>&1; then
+                echo "EKS Cluster Role exists. Importing..."
+                terraform import module.iam.aws_iam_role.eks_cluster_role dev-eks-cluster-role || true
+                fi
+
+  
+
+                 if aws iam get-role --role-name dev-eks-node-role >/dev/null 2>&1; then
+                 echo "EKS Node Role exists. Importing..."
+                 terraform import module.eks.aws_iam_role.eks_node_role dev-eks-node-role || true
+                 fi
+
+   
+                 OIDC_ARN=$(aws iam list-open-id-connect-providers \
+                 --query "OpenIDConnectProviderList[0].Arn" \
+                 --output text)
+
+                if [ ! -z "$OIDC_ARN" ]; then
+                echo "OIDC Provider exists. Importing..."
+                terraform import module.iam.aws_iam_openid_connect_provider.github $OIDC_ARN || true
+                fi
+
+
+                SG_ID=$(aws ec2 describe-security-groups \
+                 --filters Name=group-name,Values=dev-eks-cluster-sg \
+                 --query "SecurityGroups[0].GroupId" \
+                 --output text)
+
+                if [ "$SG_ID" != "None" ]; then
+                echo "Security Group exists. Importing..."
+                terraform import module.eks.aws_security_group.eks_cluster_sg $SG_ID || true
+                fi
+
+
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
