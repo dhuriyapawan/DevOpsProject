@@ -44,6 +44,7 @@ variable "availability_zones" {
 
 variable "github_repo" {
   type = string
+  default = "https://github.com/dhuriyapawan/DevOpsProject"
   
 }
 
