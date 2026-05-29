@@ -3,10 +3,9 @@ name: CI-CD Pipeline
 
 on:
   workflow_run:
-    workflows:
-      -Terraform Apply
-    # branches:
-    #   - devops1
+    workflows: ["Terraform Infrastructure"]
+    branches:
+      - devops1
     types:
       - completed
 
