@@ -3,37 +3,22 @@
 # ECR REPOSITORIES
 ############################################
 
+resource "aws_ecr_repository" "this" {
+  for_each = toset(var.repositories)
 
-resource "aws_ecr_repository_policy" "this" {
-  for_each = aws_ecr_repository.this
+  name = "${var.environment}-${each.key}"
 
-  repository = each.value.name
+  image_tag_mutability = "MUTABLE"
 
-  policy = jsonencode({
-    Version = "2012-10-17"
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 
-    Statement = [
-      {
-        Sid    = "AllowPushPull"
-        Effect = "Allow"
-
-        Principal = "*"
-
-        Action = [
-          "ecr:GetDownloadUrlForLayer",
-          "ecr:BatchGetImage",
-          "ecr:BatchCheckLayerAvailability",
-          "ecr:PutImage",
-          "ecr:InitiateLayerUpload",
-          "ecr:UploadLayerPart",
-          "ecr:CompleteLayerUpload"
-        ]
-      }
-    ]
-  })
+  tags = {
+    Environment = var.environment
+    ManagedBy   = "Terraform"
+  }
 }
-
-
 
 ############################################
 # LIFECYCLE POLICY
@@ -64,18 +49,17 @@ resource "aws_ecr_lifecycle_policy" "this" {
   })
 }
 
+############################################
+# OPTIONAL CROSS ACCOUNT POLICY
+############################################
 
+resource "aws_ecr_repository_policy" "cross_account" {
+  for_each = var.enable_cross_account_access ? aws_ecr_repository.this : {}
 
-# ================================
-# OPTIONAL REPOSITORY POLICY
-# ================================
-
-resource "aws_ecr_repository_policy" "this" {
-  count      = var.enable_cross_account_access ? 1 : 0
-  repository = aws_ecr_repository.this.name
+  repository = each.value.name
 
   policy = jsonencode({
-    Version = "2008-10-17"
+    Version = "2012-10-17"
 
     Statement = [
       {
@@ -94,17 +78,4 @@ resource "aws_ecr_repository_policy" "this" {
       }
     ]
   })
-}
-resource "aws_ecr_repository" "repos" {
-  for_each = toset([
-    "auth-service",
-    "user-service",
-    "order-service"
-  ])
-
-  name = each.value
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
 }
