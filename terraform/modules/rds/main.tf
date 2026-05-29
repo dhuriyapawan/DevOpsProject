@@ -64,7 +64,7 @@ resource "aws_db_instance" "this" {
   enabled_cloudwatch_logs_exports = ["postgresql"]
 
   performance_insights_enabled = true
-  monitoring_interval          = 60
+  monitoring_interval          = 0
 
   auto_minor_version_upgrade = true
 
