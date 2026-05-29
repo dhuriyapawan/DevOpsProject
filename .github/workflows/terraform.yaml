@@ -4,7 +4,7 @@ name: Terraform Infrastructure
 on:
   push:
      branches:
-        - devops1
+              - devops1
      paths:
       - 'terraform/**'
 
@@ -96,4 +96,3 @@ jobs:
         # working-directory: terraform/environments/dev
 
 
-        
