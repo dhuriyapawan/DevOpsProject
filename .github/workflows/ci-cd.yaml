@@ -4,7 +4,7 @@ name: CI-CD Pipeline
 on:
   push:
     branches:
-      - devops1
+    - devops1
 
 env:
   AWS_REGION: us-east-1
