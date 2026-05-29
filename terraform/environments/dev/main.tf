@@ -40,20 +40,19 @@ module "security_groups" {
 # ECR
 ############################################
 
+
 module "ecr" {
   source = "../../modules/ecr"
-
   environment = var.environment
 
- repositories = [ "users-service", "orders-service", "payments-service" ]
-
-  
-  repository_name = [
+  repositories = [
     "${var.environment}-users-service",
     "${var.environment}-orders-service",
     "${var.environment}-payments-service"
   ]
 }
+
+
 
 ############################################
 # EKS

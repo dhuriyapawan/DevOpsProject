@@ -4,10 +4,13 @@ variable "environment" {
   type        = string
 }
 
-variable "repository_name" {
-  description = "ECR repository name"
-  type        = string
+
+variable "repositories" {
+  description = "List of ECR repositories"
+  type        = list(string)
 }
+
+
 
 variable "image_tag_mutability" {
   description = "IMMUTABLE or MUTABLE"

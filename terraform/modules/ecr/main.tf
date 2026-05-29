@@ -1,24 +1,18 @@
 # main.tf
-resource "aws_ecr_repository" "this" {
-  name                 = "${var.environment}-${var.repository_name}"
-  image_tag_mutability = var.image_tag_mutability
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-
-  encryption_configuration {
-    encryption_type = "AES256"
-  }
-
-  tags = {
-    Environment = var.environment
-    Name        = "${var.environment}-${var.repository_name}"
-  }
+resource "aws_ecr_repository" "this" { 
+  for_each = toset(var.repositories) 
+  name = each.key 
+  image_tag_mutability = "MUTABLE" 
+ image_scanning_configuration { 
+  scan_on_push = true 
+  } 
+  tags = { 
+    Environment = "dev" 
+    } 
 }
 
 # ================================
-# LIFECYCLE POLICY
+# LIFECYCLE POLIC
 # ================================
 
 resource "aws_ecr_lifecycle_policy" "this" {
