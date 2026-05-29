@@ -1,10 +1,10 @@
 # backend.tf
 terraform {
   backend "s3" {
-    bucket         = "your-terraform-state-bucket"
-    key            = "prod/terraform.tfstate"
+    bucket         = "backend-s3-logs"
+    key            = "dev/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "terraform-locks"
-    encrypt        = true
+    # dynamodb_table = "terraform-locks"
+    use_lockfile        = true
   }
 }
