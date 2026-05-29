@@ -8,6 +8,8 @@ on:
      paths:
       - 'terraform/**'
 
+  workflow_dispatch:
+
 jobs:
   terraform:
     name: Terraform Apply
@@ -36,19 +38,19 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: terraform/environments/dev
+        
 
       - name: Terraform Format
         run: terraform fmt -check
-        working-directory: terraform/environments/dev
+       
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: terraform/environments/dev
+        
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: terraform/environments/dev
+        
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan

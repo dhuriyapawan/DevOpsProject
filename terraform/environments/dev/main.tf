@@ -43,13 +43,11 @@ module "security_groups" {
 module "ecr" {
   source = "../../modules/ecr"
 
-  for_each = toset([
-    "users-service",
-    "orders-service",
-    "payments-service",
-  ])
+  environment = var.environment
 
-  environment     = var.environment
+ repositories = [ "users-service", "orders-service", "payments-service" ]
+
+  
   repository_name = each.key
 }
 
