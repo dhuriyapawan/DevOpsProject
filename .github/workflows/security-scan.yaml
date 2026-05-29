@@ -5,6 +5,8 @@ on:
   workflow_run:
     workflows:
       - Terraform Infrastructure
+    branches:
+      - devops1
     types:
       - completed
 

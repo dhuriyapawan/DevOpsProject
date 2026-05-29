@@ -5,12 +5,14 @@ on:
   workflow_run:
     workflows:
       - Terraform Infrastructure
+    branches:
+      - devops1
     types:
       - completed
 
 env:
   AWS_REGION: us-east-1
-  EKS_CLUSTER_NAME: prod-eks-cluster
+  EKS_CLUSTER_NAME: dev-eks-cluster
 
 jobs:
 
