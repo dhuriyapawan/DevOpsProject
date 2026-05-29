@@ -3,21 +3,37 @@
 # ECR REPOSITORIES
 ############################################
 
-resource "aws_ecr_repository" "this" {
+
+resource "aws_ecr_repository_policy" "this" {
   for_each = aws_ecr_repository.this
-  name = "${var.environment}-${each.key}"
-  
-  image_tag_mutability = "MUTABLE"
 
-  image_scanning_configuration {
-    scan_on_push = true
-  }
+  repository = each.value.name
 
-  tags = {
-    Environment = var.environment
-    ManagedBy   = "Terraform"
-  }
+  policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Sid    = "AllowPushPull"
+        Effect = "Allow"
+
+        Principal = "*"
+
+        Action = [
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:PutImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload"
+        ]
+      }
+    ]
+  })
 }
+
+
 
 ############################################
 # LIFECYCLE POLICY
