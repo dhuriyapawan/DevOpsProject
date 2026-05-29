@@ -1,10 +1,10 @@
-# terraform.yaml
+
 name: Terraform Infrastructure
 
 on:
   push:
     branches:
-    - devops1
+      - devops1
     paths:
       - 'terraform/**'
 
@@ -38,61 +38,102 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        
 
       - name: Terraform Format
-        run: terraform fmt -recursive  
-       
+        run: terraform fmt -recursive
 
       - name: Terraform Validate
         run: terraform validate
-      
+
       - name: Import Existing AWS Resources
         run: |
 
-  
-                if aws iam get-role --role-name dev-eks-cluster-role >/dev/null 2>&1; then
-                echo "EKS Cluster Role exists. Importing..."
-                terraform import module.iam.aws_iam_role.eks_cluster_role dev-eks-cluster-role || true
-                fi
+          # ==========================================
+          # Import EKS Cluster Role
+          # ==========================================
+          if aws iam get-role --role-name dev-eks-cluster-role >/dev/null 2>&1; then
 
-  
+            if ! terraform state list | grep -q "module.iam.aws_iam_role.eks_cluster_role"; then
+              echo "Importing EKS Cluster Role..."
 
-                 if aws iam get-role --role-name dev-eks-node-role >/dev/null 2>&1; then
-                 echo "EKS Node Role exists. Importing..."
-                 terraform import module.eks.aws_iam_role.eks_node_role dev-eks-node-role || true
-                 fi
+              terraform import \
+                module.iam.aws_iam_role.eks_cluster_role \
+                dev-eks-cluster-role
 
-   
-                 OIDC_ARN=$(aws iam list-open-id-connect-providers \
-                 --query "OpenIDConnectProviderList[0].Arn" \
-                 --output text)
+            else
+              echo "EKS Cluster Role already managed by Terraform."
+            fi
 
-                if [ ! -z "$OIDC_ARN" ]; then
-                echo "OIDC Provider exists. Importing..."
-                terraform import module.iam.aws_iam_openid_connect_provider.github $OIDC_ARN || true
-                fi
+          fi
 
 
-                SG_ID=$(aws ec2 describe-security-groups \
-                 --filters Name=group-name,Values=dev-eks-cluster-sg \
-                 --query "SecurityGroups[0].GroupId" \
-                 --output text)
+          # ==========================================
+          # Import EKS Node Role
+          # ==========================================
+          if aws iam get-role --role-name dev-eks-node-role >/dev/null 2>&1; then
 
-                if [ "$SG_ID" != "None" ]; then
-                echo "Security Group exists. Importing..."
-                terraform import module.eks.aws_security_group.eks_cluster_sg $SG_ID || true
-                fi
-      
+            if ! terraform state list | grep -q "module.eks.aws_iam_role.eks_node_role"; then
+              echo "Importing EKS Node Role..."
 
+              terraform import \
+                module.eks.aws_iam_role.eks_node_role \
+                dev-eks-node-role
+
+            else
+              echo "EKS Node Role already managed by Terraform."
+            fi
+
+          fi
+
+
+          # ==========================================
+          # Import GitHub OIDC Provider
+          # ==========================================
+          OIDC_ARN=$(aws iam list-open-id-connect-providers \
+            --query "OpenIDConnectProviderList[0].Arn" \
+            --output text)
+
+          if [ ! -z "$OIDC_ARN" ]; then
+
+            if ! terraform state list | grep -q "module.iam.aws_iam_openid_connect_provider.github"; then
+              echo "Importing GitHub OIDC Provider..."
+
+              terraform import \
+                module.iam.aws_iam_openid_connect_provider.github \
+                $OIDC_ARN
+
+            else
+              echo "OIDC Provider already managed by Terraform."
+            fi
+
+          fi
+
+
+          # ==========================================
+          # Import EKS Security Group
+          # ==========================================
+          SG_ID=$(aws ec2 describe-security-groups \
+            --filters Name=group-name,Values=dev-eks-cluster-sg \
+            --query "SecurityGroups[0].GroupId" \
+            --output text)
+
+          if [ "$SG_ID" != "None" ]; then
+
+            if ! terraform state list | grep -q "module.eks.aws_security_group.eks_cluster_sg"; then
+              echo "Importing EKS Security Group..."
+
+              terraform import \
+                module.eks.aws_security_group.eks_cluster_sg \
+                $SG_ID
+
+            else
+              echo "EKS Security Group already managed by Terraform."
+            fi
+
+          fi
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-      
-
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        # working-directory: terraform/environments/dev
-
-
