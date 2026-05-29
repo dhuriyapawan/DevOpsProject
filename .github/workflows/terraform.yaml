@@ -24,32 +24,62 @@ jobs:
         working-directory: terraform/environments/dev
 
     steps:
+      # ==========================================
+      # Checkout Repository
+      # ==========================================
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+
+      # ==========================================
+      # Configure AWS Credentials
+      # ==========================================
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
           aws-region: us-east-1
 
+
+      # ==========================================
+      # Setup Terraform
+      # ==========================================
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+
+      # ==========================================
+      # Terraform Init
+      # ==========================================
       - name: Terraform Init
         run: terraform init
 
+
+      # ==========================================
+      # Terraform Format Check
+      # ==========================================
       - name: Terraform Format
         run: terraform fmt -recursive
 
+
+      # ==========================================
+      # Terraform Validate
+      # ==========================================
       - name: Terraform Validate
         run: terraform validate
 
+
+      # ==========================================
+      # Import Existing AWS Resources
+      # ==========================================
       - name: Import Existing AWS Resources
         run: |
 
+          echo "Checking existing AWS resources..."
+
+
           # ==========================================
-          # Import EKS Cluster Role
+          # Import EKS Cluster IAM Role
           # ==========================================
           if aws iam get-role --role-name dev-eks-cluster-role >/dev/null 2>&1; then
 
@@ -61,14 +91,14 @@ jobs:
                 dev-eks-cluster-role
 
             else
-              echo "EKS Cluster Role already managed by Terraform."
+              echo "EKS Cluster Role already managed."
             fi
 
           fi
 
 
           # ==========================================
-          # Import EKS Node Role
+          # Import EKS Node IAM Role
           # ==========================================
           if aws iam get-role --role-name dev-eks-node-role >/dev/null 2>&1; then
 
@@ -80,7 +110,26 @@ jobs:
                 dev-eks-node-role
 
             else
-              echo "EKS Node Role already managed by Terraform."
+              echo "EKS Node Role already managed."
+            fi
+
+          fi
+
+
+          # ==========================================
+          # Import GitHub Actions IAM Role
+          # ==========================================
+          if aws iam get-role --role-name dev-github-actions-role >/dev/null 2>&1; then
+
+            if ! terraform state list | grep -q "module.iam.aws_iam_role.github_actions_role"; then
+              echo "Importing GitHub Actions IAM Role..."
+
+              terraform import \
+                module.iam.aws_iam_role.github_actions_role \
+                dev-github-actions-role
+
+            else
+              echo "GitHub Actions IAM Role already managed."
             fi
 
           fi
@@ -93,7 +142,7 @@ jobs:
             --query "OpenIDConnectProviderList[0].Arn" \
             --output text)
 
-          if [ ! -z "$OIDC_ARN" ]; then
+          if [ ! -z "$OIDC_ARN" ] && [ "$OIDC_ARN" != "None" ]; then
 
             if ! terraform state list | grep -q "module.iam.aws_iam_openid_connect_provider.github"; then
               echo "Importing GitHub OIDC Provider..."
@@ -103,7 +152,7 @@ jobs:
                 $OIDC_ARN
 
             else
-              echo "OIDC Provider already managed by Terraform."
+              echo "OIDC Provider already managed."
             fi
 
           fi
@@ -117,7 +166,7 @@ jobs:
             --query "SecurityGroups[0].GroupId" \
             --output text)
 
-          if [ "$SG_ID" != "None" ]; then
+          if [ "$SG_ID" != "None" ] && [ ! -z "$SG_ID" ]; then
 
             if ! terraform state list | grep -q "module.eks.aws_security_group.eks_cluster_sg"; then
               echo "Importing EKS Security Group..."
@@ -127,13 +176,40 @@ jobs:
                 $SG_ID
 
             else
-              echo "EKS Security Group already managed by Terraform."
+              echo "EKS Security Group already managed."
             fi
 
           fi
 
+
+          # ==========================================
+          # Import EKS Cluster
+          # ==========================================
+          if aws eks describe-cluster --name dev-eks-cluster >/dev/null 2>&1; then
+
+            if ! terraform state list | grep -q "module.eks.aws_eks_cluster.this"; then
+              echo "Importing EKS Cluster..."
+
+              terraform import \
+                module.eks.aws_eks_cluster.this \
+                dev-eks-cluster
+
+            else
+              echo "EKS Cluster already managed."
+            fi
+
+          fi
+
+
+      # ==========================================
+      # Terraform Plan
+      # ==========================================
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 
+
+      # ==========================================
+      # Terraform Apply
+      # ==========================================
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
