@@ -18,7 +18,7 @@ variable "allowed_security_group_ids" {
   description = "Security groups allowed to access RDS"
   type        = list(string)
 }
- 
+  
 variable "db_name" {
   description = "Database name"
   type        = string
