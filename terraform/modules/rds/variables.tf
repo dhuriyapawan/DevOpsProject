@@ -34,7 +34,7 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
-
+ 
 variable "instance_class" {
   description = "RDS instance type"
   type        = string
