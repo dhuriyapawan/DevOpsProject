@@ -37,6 +37,3 @@ variable "cross_account_arns" {
 }
 
 
-variable "repositories" {
-  type = list(string)
-}
