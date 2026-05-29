@@ -36,21 +36,24 @@ module "security_groups" {
   allowed_cidrs = var.allowed_cidrs
 }
 
-############################################
-# ECR
-############################################
 
+############################################
+# ECR REPOSITORIES
+############################################
 
 module "ecr" {
   source = "../../modules/ecr"
+
   environment = var.environment
 
   repositories = [
-    "${var.environment}-users-service",
-    "${var.environment}-orders-service",
-    "${var.environment}-payments-service"
+    "auth-service",
+    "user-service",
+    "order-service"
   ]
 }
+
+
 
 
 

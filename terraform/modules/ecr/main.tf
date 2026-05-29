@@ -1,41 +1,44 @@
-# main.tf
+
+############################################
+# ECR REPOSITORIES
+############################################
+
 resource "aws_ecr_repository" "this" {
-  name                 = "${var.environment}-${var.repository_name}"
-  image_tag_mutability = var.image_tag_mutability
+  for_each = toset(var.repositories)
+
+  name = "${var.environment}-${each.key}"
+
+  image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
     scan_on_push = true
   }
 
-  encryption_configuration {
-    encryption_type = "AES256"
-  }
-
   tags = {
     Environment = var.environment
-    Name        = "${var.environment}-${var.repository_name}"
+    ManagedBy   = "Terraform"
   }
 }
 
-
-# ================================
+############################################
 # LIFECYCLE POLICY
-# ================================
+############################################
 
 resource "aws_ecr_lifecycle_policy" "this" {
-  repository = aws_ecr_repository.this.name
+  for_each = aws_ecr_repository.this
+
+  repository = each.value.name
 
   policy = jsonencode({
     rules = [
       {
         rulePriority = 1
-
-        description = "Keep last 10 images"
+        description  = "Keep last 10 images"
 
         selection = {
           tagStatus   = "any"
           countType   = "imageCountMoreThan"
-          countNumber = var.keep_image_count
+          countNumber = 10
         }
 
         action = {
@@ -45,6 +48,8 @@ resource "aws_ecr_lifecycle_policy" "this" {
     ]
   })
 }
+
+
 
 # ================================
 # OPTIONAL REPOSITORY POLICY
