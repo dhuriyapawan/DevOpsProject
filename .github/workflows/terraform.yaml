@@ -3,7 +3,9 @@ name: Terraform Infrastructure
 
 on:
   push:
-    paths:
+     branches:
+        - devops1
+     paths:
       - 'terraform/**'
 
 jobs:
