@@ -48,7 +48,11 @@ module "ecr" {
  repositories = [ "users-service", "orders-service", "payments-service" ]
 
   
-  repository_name = each.repository
+  repository_name = [
+    "${var.environment}-users-service",
+    "${var.environment}-orders-service",
+    "${var.environment}-payments-service"
+  ]
 }
 
 ############################################
