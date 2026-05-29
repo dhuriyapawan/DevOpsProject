@@ -53,16 +53,19 @@ variable "github_repo" {
 
 variable "db_name" {
   type = string
+  default = "microservicesdb"
 }
 
 variable "db_username" {
   type      = string
   sensitive = true
+  default   = "postgres"
 }
 
 variable "db_password" {
   type      = string
   sensitive = true
+  default   = "ChangeMe123!"
 }
 
 # CIDR
