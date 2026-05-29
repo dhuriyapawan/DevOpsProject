@@ -4,10 +4,9 @@
 ############################################
 
 resource "aws_ecr_repository" "this" {
-  for_each = toset(var.repositories)
-
+  for_each = aws_ecr_repository.this
   name = "${var.environment}-${each.key}"
-
+  
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {

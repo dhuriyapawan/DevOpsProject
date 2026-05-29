@@ -51,6 +51,7 @@ module "ecr" {
     "user-service",
     "order-service"
   ]
+  image_tag_mutability = "IMMUTABLE"
 }
 
 
