@@ -3,7 +3,7 @@
 
 set -e
 
-AWS_REGION="ap-south-1"
+AWS_REGION="ap-east-1"
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
 SERVICES=(
