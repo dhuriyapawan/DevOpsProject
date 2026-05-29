@@ -2,10 +2,12 @@
 name: Security Scans
 
 on:
-  
-  push:
-    branches:
-    - devops1
+  workflow_run:
+    workflows:
+      - "Terraform Infrastructure"
+    types:
+      - completed
+
 
     
 jobs:
