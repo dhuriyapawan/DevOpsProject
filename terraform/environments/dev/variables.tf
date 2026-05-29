@@ -32,9 +32,6 @@ variable "availability_zones" {
   type = list(string)
 }
 
-variable "allowed_cidrs" {
-  type = list(string)
-}
 
 ############################################
 # GITHUB
