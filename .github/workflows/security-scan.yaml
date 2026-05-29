@@ -2,14 +2,9 @@
 name: Security Scans
 
 on:
-  workflow_run:
-    workflows:
-      - Terraform Apply
+  push:
     branches:
       - devops1
-    types:
-      - completed
-
 
     
 jobs:
