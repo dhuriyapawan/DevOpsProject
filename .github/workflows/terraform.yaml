@@ -47,12 +47,6 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
       
-    
-      
-
-
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan
       - name: Import Existing AWS Resources
         run: |
 
@@ -89,6 +83,12 @@ jobs:
                 echo "Security Group exists. Importing..."
                 terraform import module.eks.aws_security_group.eks_cluster_sg $SG_ID || true
                 fi
+      
+
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+      
 
 
       - name: Terraform Apply
