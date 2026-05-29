@@ -48,7 +48,7 @@ module "ecr" {
  repositories = [ "users-service", "orders-service", "payments-service" ]
 
   
-  repository_name = each.key
+  repository_name = each.repository
 }
 
 ############################################
