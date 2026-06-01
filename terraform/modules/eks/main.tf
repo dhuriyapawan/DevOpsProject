@@ -114,7 +114,7 @@ resource "aws_iam_role_policy_attachment" "container_registry_policy" {
 resource "aws_iam_role_policy_attachment" "ssm_policy" {
   role       = aws_iam_role.eks_node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
+}   
 
 # =========================
 # EKS NODE GROUP
