@@ -22,4 +22,4 @@ resource "aws_secretsmanager_secret_version" "db_credentials_value" {
     username = var.db_username
     password = var.db_password
   })
-}
+} 

@@ -64,7 +64,23 @@ jobs:
         run: |
           docker push \
             ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${{ matrix.service }}:latest
+      
+      - name: Create Namespace
+        run: |
+             kubectl apply -f kubernetes/auth-service/namespace.yaml
+             sleep 10
 
+      - name: Deploy
+        run: |
+              kubectl apply -f kubernetes/auth-service/configmap.yaml
+              kubectl apply -f kubernetes/auth-service/secret.yaml
+              kubectl apply -f kubernetes/auth-service/service.yaml
+              kubectl apply -f kubernetes/auth-service/deployment.yaml
+      - name: Debug EKS
+        run: |
+                 kubectl config current-context
+                 kubectl cluster-info
+                 kubectl get ns
   deploy:
     name: Deploy to EKS
 
@@ -72,6 +88,8 @@ jobs:
 
     needs:
       - build-and-push
+
+    
 
     permissions:
       id-token: write
@@ -106,4 +124,4 @@ jobs:
         run: |
           kubectl get pods -A
           kubectl get svc -A
-# ```
+
