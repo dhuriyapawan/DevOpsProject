@@ -47,6 +47,8 @@ variable "engine_version" {
   default     = "16.3"
 }
 
+
+
 variable "allocated_storage" {
   description = "Initial storage"
   type        = number
