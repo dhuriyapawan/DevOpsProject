@@ -68,4 +68,10 @@ kind: ConfigMap
 metadata:
   name: auth-service-config
   namespace: auth-service
-data: {}
+  data: 
+    AWS_REGION: "us-east-1"
+    PORT: "3000"
+    DB_HOST: "postgres-service"
+    DB_PORT: "5432"
+    DB_NAME: "microservicesdb"
+  
