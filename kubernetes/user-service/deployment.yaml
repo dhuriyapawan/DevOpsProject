@@ -20,7 +20,7 @@ spec:
       containers:
         - name: user-service
 
-          image: 878445923420.dkr.ecr.us-east-1.amazonaws.com/user-service:latest
+          image: 878445923420.dkr.ecr.us-east-1.amazonaws.com/user-service:1.0.0
 
           ports:
             - containerPort: 3001
